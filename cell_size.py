@@ -34,7 +34,7 @@ def get_cell_size(fov, overlap_rate):
     fov : tuple
         (width,length) of the camera's field of view
     overlap_rate : float
-        Gives the rate at which different cell images overlap
+        Value between 0 and 1 that gives the percent cell images overlap 
 
     Returns
     -------
