@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 
 def get_camera_fov(altitude, vert_angle, horiz_angle):
