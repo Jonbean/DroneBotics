@@ -46,4 +46,17 @@ def get_cell_size(fov, overlap_rate):
     width = (1-overlap_rate) * fov[0]
     length = (1-overlap_rate) * fov[1]
     return width, length
-    
+
+####
+# MAIN
+####
+def main():
+    """
+    Example is below
+    """
+    fov = get_camera_fov(2, 90, 90)
+    width, length = get_cell_size(fov, 0.1)
+    print(width, length)
+
+if __name__ == "__main__":
+    main()   
