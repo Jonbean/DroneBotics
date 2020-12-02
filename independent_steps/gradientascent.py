@@ -2,7 +2,8 @@
 import sys
 import numpy as np
 import random
-from modules.wavefront import get_valid_neighbors, is_valid_cell, get_directions
+from wavefront import get_valid_neighbors, is_valid_cell, get_directions
+
 
 """
 This module contains all the  necessary functions to impliment the method 

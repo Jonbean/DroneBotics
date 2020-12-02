@@ -1,3 +1,4 @@
+from cell_size import get_camera_fov, get_cell_size
 import numpy as np 
 import matplotlib.pyplot as plt
 import matplotlib.collections as collections
