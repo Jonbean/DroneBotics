@@ -21,6 +21,41 @@ import matplotlib.patches as mpatches
 This master script impliments the wavefront algorithm based on input files:
 """
 
+def path_between(from_point, to_point, step_size):
+    '''
+    Find path between point specified by a step size
+    '''
+
+    # TODO: Use a path resolution of 10 steps for computing a path between points
+    
+    # find the intermediate end positions 
+    potential_path = []
+    for d in range(len(from_point)):                                            
+        dist = np.linspace(from_point[d], to_point[d], step_size, endpoint=True)
+        potential_path.append(dist)                                                       
+    potential_path = list(np.array(potential_path).T)                                          
+    potential_path = [list(point) for point in potential_path]
+    potential_path = [ (round(point[0],2), round(point[1],2)) for point in potential_path] 
+    return potential_path
+
+
+def find_intermediate_points(coverage_path):
+    """
+    This function finds linear points between each cell to help the 
+    drone navigate without gaining too much momentum.
+    """
+    # init
+    start_point = (0,0)
+    drone_path = [start_point]
+    
+    for point in coverage_path:
+        path_to_next = path_between(drone_path[-1], point, 10)
+        for path in path_to_next:
+            drone_path.append(path)
+        
+    return drone_path
+
+
 def main():
     """
     This main function controls the flow of the script
@@ -90,5 +125,11 @@ def main():
     coverage_path = gradientascent.grad_ascent(potential_func, start_cell, goal_cell) 
     print(f"coverage_path: {coverage_path}") 
 
+    ####
+    # Step 5: Find points for the drone starting from 0,0
+    ####
+    drone_path = find_intermediate_points(coverage_path)
+    print(drone_path)
+    
 if __name__ == "__main__":
     main()
