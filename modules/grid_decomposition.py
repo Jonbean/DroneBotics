@@ -59,7 +59,7 @@ def plot_cell(xy, width, height, color):
 
     return mpatches.Rectangle(xy, width, height, facecolor=final_color)
 
-def visualize_2D_graph(state_bounds, cells, obstacles, cell_width, cell_height, filename=None):
+def visualize_2D_graph(state_bounds, cells, obstacles, cell_width, cell_height, filename=None, waypoints=None):
     '''
     plot the cells and obstacles on a 2d canvas, this is just for visualization.
 
@@ -107,6 +107,27 @@ def visualize_2D_graph(state_bounds, cells, obstacles, cell_width, cell_height, 
         circle = mpatches.Circle([obs.location[0], obs.location[1]], radius = obs.radius, color = 'y')
         # patches.append(circle)
         ax.add_patch(circle)
+
+    
+    # if cover path points are provided, render with the cover path plots
+    if waypoints != None:
+        for i in range(len(waypoints)-1):
+            
+            # calculating cover path on the image
+            x = waypoints[i][0] * cell_width + cell_width * 0.5
+            y = waypoints[i][1] * cell_height + cell_height * 0.5
+            dx = waypoints[i+1][0] * cell_width + cell_width * 0.5 - x
+            dy = waypoints[i+1][1] * cell_height + cell_height * 0.5 - y
+            vec = np.array([waypoints[i+1][0] - waypoints[i][0], waypoints[i+1][1] - waypoints[i][1]])
+
+            # check heuristically if re-routing happened, if so plot with megenta arrows
+            if np.linalg.norm(vec) >= 1.5:
+                arrow = mpatches.Arrow(x, y, dx, dy, width=0.5, color='m')
+            else:
+                # regular path plot with yellow arrows
+                arrow = mpatches.Arrow(x, y, dx, dy, width=0.5, color='y')
+            ax.add_patch(arrow)
+        
 
 
     if filename is not None:
