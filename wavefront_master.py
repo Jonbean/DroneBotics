@@ -36,6 +36,7 @@ def path_between(from_point, to_point, step_size):
     potential_path = list(np.array(potential_path).T)                                          
     potential_path = [list(point) for point in potential_path]
     potential_path = [ (round(point[0],2), round(point[1],2)) for point in potential_path] 
+
     return potential_path
 
 
@@ -49,12 +50,12 @@ def find_intermediate_points(coverage_path):
     drone_path = [start_point]
     
     for point in coverage_path:
+        point = (-1*point[0], point[1]) # x needs to be mirrored for webots
         path_to_next = path_between(drone_path[-1], point, 10)
         for path in path_to_next:
             drone_path.append(path)
         
-    return drone_path
-
+    return drone_path 
 
 def main():
     """
@@ -73,7 +74,7 @@ def main():
     ####
     # step 1: get the cell size
     ####
-    #fov = cell_size.get_camera_fov(0.5, 1.577777, 1.577777) 
+    #fov = cell_size.get_camera_fov(0.5, 1.5, 1.5) 
     #cell_width, cell_height = cell_size.get_cell_size(fov, 0)
 
     # TODO: Above doesn't work with grid decomposition
