@@ -1,9 +1,15 @@
+import sys
+sys.path.append('/Users/rickgentry/Fall_2020/advanced_robotics/final_project/DroneBotics/modules')
+
 from controller import *
-from trajectory import Trajectory
+from Trajectory import Trajectory
+
 import mavic2proHelper
 from simple_pid import PID
 import csv
 import struct
+
+
 
 params = dict()
 with open("../params.csv", "r") as f:
@@ -45,10 +51,11 @@ yawPID = PID(float(params["yaw_Kp"]), float(params["yaw_Ki"]), float(params["yaw
 
 # Trajectory generation using cubic spline
 # waypoints = get_waypoints()
-waypoints = [[0,0,0], [0,0,5], [5,5,5], [4,-4,5], [4,-4,0]]
+waypoints = [[0,0,0], [2,2,5], [5,10,5], [4,3,5], [4,4,0]]
 T = 70
 traj = Trajectory(waypoints,T)
 traj.cubic_spline()
+
 timestep_secs = timestep/1000
 t = timestep_secs * 2
 pos = traj.get_pos(t)
@@ -77,6 +84,7 @@ while (robot.step(timestep) != -1):
     yGPS = gps.getValues()[0]
     zGPS = gps.getValues()[1]
 
+    print(xGPS,yGPS,zGPS)
     # if  i < len(waypoints) and \
     #     ((xGPS >= waypoints[i][0]*prob_bound) and \
     #     (xGPS <= waypoints[i][0] * (2-prob_bound))) and \
@@ -101,7 +109,7 @@ while (robot.step(timestep) != -1):
     if (next_time < T):
         # Get next targets from trajectory
         pos = traj.get_pos(next_time)
-        print("current pos: %s, %s, %s" % (xGPS,yGPS,zGPS))
+        #print("current pos: %s, %s, %s" % (xGPS,yGPS,zGPS))
         
         targetX, targetY, target_altitude = pos[0], pos[1], pos[2]
         print("next pos: %s, %s, %s" % (targetX, targetY, target_altitude))
@@ -110,6 +118,8 @@ while (robot.step(timestep) != -1):
     rollPID.setpoint = targetX
     pitchPID.setpoint = targetY
     throttlePID.setpoint = target_altitude
+
+    #print("TARGETX: ", targetX)
 
     # Calculate inputs for motors
     vertical_input = throttlePID(zGPS)
