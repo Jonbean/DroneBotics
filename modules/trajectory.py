@@ -65,9 +65,6 @@ class Trajectory:
             pos.append(p)
         return pos
 
-    def plot_trajectory(self,dt):
-        pass
-
     def solve_equations(self, us):
         A = np.zeros((self.n-1,self.n-1))
         for i in range(0,self.n-1):
@@ -90,7 +87,7 @@ class Trajectory:
 def main():
     waypoints = [[0,0,5], [5,5,5], [4,-4,5], [4,-4,0]]
     traj = Trajectory(waypoints,3)
-    qr = Quadrotor()
+    qr = Quadrotor(size=2.0,show_animation=False)
     dt = 0.1
     t = 0
     traj.cubic_spline()
@@ -100,6 +97,8 @@ def main():
         print(pos)
         qr.update_pose(pos[0],pos[1],pos[2],0,0,0)
         t += dt
+    qr.plot_after(plot_pause=0.05)
+
 
 if __name__ == "__main__":
     main()

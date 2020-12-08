@@ -1,9 +1,10 @@
 import sys
+# Need to make sure path is correct for it to run
 sys.path.append('/Users/rickgentry/Fall_2020/advanced_robotics/final_project/DroneBotics/modules')
 
 from controller import *
 from Trajectory import Trajectory
-
+from Quadrotor import Quadrotor
 import mavic2proHelper
 from simple_pid import PID
 import csv
@@ -52,23 +53,26 @@ yawPID = PID(float(params["yaw_Kp"]), float(params["yaw_Ki"]), float(params["yaw
 # Trajectory generation using cubic spline
 # waypoints = get_waypoints()
 waypoints = [[0,0,0], [2,2,5], [5,10,5], [4,3,5], [4,4,0]]
-T = 70
+T = 50
 traj = Trajectory(waypoints,T)
 traj.cubic_spline()
 
 timestep_secs = timestep/1000
-t = timestep_secs * 2
-pos = traj.get_pos(t)
 
-targetX, targetY, target_altitude = pos[0], pos[1], pos[2]
-print("FIrst pos: %s, %s, %s" % (targetX, targetY, target_altitude))
+# For plotting trajectory
+drone = Quadrotor(show_animation=False)
+
+# Initializing vars used in control loop
 i = 0
 prob_bound = 0.1
-wait_time = 1
-time_of_last_change = robot.getTime()
+plot_interval = 0.5
+plot_time= -plot_interval
+
 while (robot.step(timestep) != -1):
     current_time = robot.getTime()
     next_time = current_time + timestep_secs
+    dt_plot = current_time - plot_time
+
     #print ("Time: %s, %s" % (current_time, next_time))
     led_state = int(robot.getTime()) % 2
     front_left_led.set(led_state)
@@ -84,14 +88,11 @@ while (robot.step(timestep) != -1):
     yGPS = gps.getValues()[0]
     zGPS = gps.getValues()[1]
 
-    print(xGPS,yGPS,zGPS)
-    # if  i < len(waypoints) and \
-    #     ((xGPS >= waypoints[i][0]*prob_bound) and \
-    #     (xGPS <= waypoints[i][0] * (2-prob_bound))) and \
-    #     ((yGPS >= waypoints[i][1]*prob_bound) and \
-    #     (yGPS <= waypoints[i][1]*(2-prob_bound))) and \
-    #     ((zGPS >= waypoints[i][2]*prob_bound) and \
-    #     (zGPS <= waypoints[i][2]*(2-prob_bound))):
+    if (dt_plot > plot_interval):
+        plot_time = current_time
+        drone.update_pose(xGPS,yGPS,zGPS,roll,pitch,yaw)
+
+
     if  i < len(waypoints) and \
         ((xGPS >= waypoints[i][0] - prob_bound) and \
         (xGPS <= waypoints[i][0] + prob_bound)) and \
@@ -100,26 +101,27 @@ while (robot.step(timestep) != -1):
         ((zGPS >= waypoints[i][2] - prob_bound) and \
         (zGPS <= waypoints[i][2] + prob_bound)):
 
-        print(f"before: waypoint {i + 1} at position {xGPS},{yGPS},{zGPS}")
+        print(f"at: waypoint {i} at position {xGPS},{yGPS},{zGPS}")
         i += 1
-        #time_of_last_change = robot.getTime()
-        print(f"after: waypoint {i} at position {xGPS},{yGPS},{zGPS}")
-        
+
+
+    # Stop drone if we reach last waypoint
+    elif i == len(waypoints):
+        mavic2proHelper.motorsSpeed(robot, 0, 0, 0, 0)
+        drone.plot_after(plot_pause=0.05)
+        break
+
     # If we haven't reached the end of the trajectory, then set next position based on the target
     if (next_time < T):
         # Get next targets from trajectory
         pos = traj.get_pos(next_time)
-        #print("current pos: %s, %s, %s" % (xGPS,yGPS,zGPS))
-        
-        targetX, targetY, target_altitude = pos[0], pos[1], pos[2]
-        print("next pos: %s, %s, %s" % (targetX, targetY, target_altitude))
+        targetX, targetY, target_altitude = pos[0], -pos[1], pos[2]
+
 
     # Set desired next position
     rollPID.setpoint = targetX
     pitchPID.setpoint = targetY
     throttlePID.setpoint = target_altitude
-
-    #print("TARGETX: ", targetX)
 
     # Calculate inputs for motors
     vertical_input = throttlePID(zGPS)
