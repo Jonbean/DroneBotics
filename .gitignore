@@ -1,1 +1,5 @@
 .vscode*
+.DS_STORE*
+runtime.ini*
+**/*.pyc
+webots_project/mavic_Edit_python/worlds/.mavic_2_pro.wbproj

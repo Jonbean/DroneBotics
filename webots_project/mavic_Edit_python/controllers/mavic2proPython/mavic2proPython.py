@@ -75,12 +75,12 @@ while (robot.step(timestep) != -1):
     # This is the controller code.
     #####
     current_time = robot.getTime()
-    prob_bound = 0.95
-    wait_time = 1
-    if ((xGPS >= list[cell_numb][0]*prob_bound) or \
-       (xGPS <= list[cell_numb][0]*prob_bound)) and \
-       ((yGPS >= list[cell_numb][1]*prob_bound) or \
-       (yGPS <= list[cell_numb][1]*prob_bound)):  
+    prob_bound = 0.05
+    wait_time = 0.1
+    if ((xGPS >= list[cell_numb][0] - prob_bound) and \
+       (xGPS <= list[cell_numb][0] + prob_bound)) and \
+       ((yGPS >= list[cell_numb][1] - prob_bound) and \
+       (yGPS <= list[cell_numb][1] + prob_bound)):  
         if (current_time - time_of_last_change) > wait_time:
             print(f"before: {targetX, targetY}")
             cell_numb += 1
