@@ -125,7 +125,12 @@ def main():
     ####
     coverage_path = gradientascent.grad_ascent(potential_func, start_cell, goal_cell) 
     print(f"coverage_path: {coverage_path}") 
-
+    grid_decomposition.visualize_2D_graph(state_bounds, 
+                                          availability_matrix, 
+                                          obstacles, 
+                                          cell_width, 
+                                          cell_height, 
+                                          waypoints=coverage_path)
     ####
     # Step 5: Find points for the drone starting from 0,0
     ####
