@@ -97,8 +97,8 @@ def main():
         print(pos)
         qr.update_pose(pos[0],pos[1],pos[2],0,0,0)
         t += dt
-    #qr.plot_after(plot_pause=0.05)
-    qr.plot_animated()
+    qr.plot_after(plot_pause=0.05)
+    
 
 
 if __name__ == "__main__":
