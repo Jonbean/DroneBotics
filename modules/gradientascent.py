@@ -2,7 +2,8 @@
 import sys
 import numpy as np
 import random
-from modules.wavefront import get_valid_neighbors, is_valid_cell, get_directions
+from wavefront import get_valid_neighbors, is_valid_cell, get_directions
+from gradient_descent import gradient_descent
 
 """
 This module contains all the  necessary functions to impliment the method 
@@ -195,7 +196,8 @@ def grad_ascent(potential_function, start_cell, goal_cell):
 
             # find viable path to chosen node
             # TODO: IMPLEMENT THIS
-            #path_to_chosen = path_to_node(curr_cell, chosen)
+            path_to_chosen = gradient_descent(potential_function,curr_cell, chosen)
+            coverage_path += path_to_chosen
             #for intermediate_n in path_to_chosen:
             #    coverage_path.append(intermediate_n)
 
