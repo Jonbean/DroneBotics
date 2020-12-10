@@ -77,7 +77,7 @@ def get_valid_neighbors(cur_cell, visited_grid, grid):
     
 
 
-def potential_function(grid, goal_cell):
+def potential_function(map, goal_cell):
     '''
     Computes the potential function for the grid starting at the goal state
     
@@ -97,9 +97,8 @@ def potential_function(grid, goal_cell):
     '''
     row,col = goal_cell
     p = 1
-    
+    grid = np.copy(map)
     visited_grid = np.zeros_like(grid,dtype=bool)
-
     # initialize goal potential to 1
     grid[row,col] = p
     visited_grid[row,col] = True
@@ -125,7 +124,10 @@ def potential_function(grid, goal_cell):
         
 def main():
     grid_map = np.array([[1,1,1,1,1,0],[1,1,0,1,1,0],[1,1,0,0,1,0],[1,1,1,1,1,0],[1,1,1,1,1,1]])
-    print(potential_function(grid_map,(1,3)))
+    
+    original = potential_function(grid_map,(1,3))
+    new_potential = potential_function(original,(3,2))
+    print(new_potential)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import numpy as np
 from .wavefront import potential_function, get_valid_neighbors, is_valid_cell, get_directions
 
 
-def get_lowest_potential_neighbor(current_cell,visited_grid,potential_grid):
+def get_lowest_potential_neighbor(current_cell,visited_grid,potential):
     '''
     Returns the lowest potential valid neighbor of the current cell
 
@@ -23,6 +23,7 @@ def get_lowest_potential_neighbor(current_cell,visited_grid,potential_grid):
         Tuple containing index of next cell to visit in grid
 
     '''
+    potential_grid = np.copy(potential)
     neighbors = get_valid_neighbors(current_cell,visited_grid,potential_grid)
     min_potential = float("inf")
     next_cell = None
