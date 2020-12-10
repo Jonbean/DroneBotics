@@ -1,5 +1,5 @@
 import numpy as np
-from wavefront import potential_function, get_valid_neighbors, is_valid_cell, get_directions
+from .wavefront import potential_function, get_valid_neighbors, is_valid_cell, get_directions
 
 
 def get_lowest_potential_neighbor(current_cell,visited_grid,potential_grid):

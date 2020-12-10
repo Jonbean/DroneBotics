@@ -2,10 +2,8 @@
 import sys
 import numpy as np
 import random
-#from wavefront import *
-#from gradient_descent import *
-from .wavefront import get_valid_neighbors, is_valid_cell, get_directions
-from .gradient_descent import gradient_descent
+from wavefront import get_valid_neighbors, is_valid_cell, get_directions
+from gradient_descent import gradient_descent
 
 """
 This module contains all the  necessary functions to impliment the method 

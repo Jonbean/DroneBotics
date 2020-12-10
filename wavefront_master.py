@@ -6,6 +6,7 @@ from modules import grid_decomposition
 from modules import wavefront
 from modules import gradientascent
 from modules.wavefront import get_valid_neighbors, is_valid_cell, get_directions
+from modules.gradient_descent import gradient_descent
 # std pkgs
 import sys
 import random
