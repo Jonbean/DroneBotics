@@ -5,6 +5,7 @@ import random
 #from wavefront import *
 #from gradient_descent import *
 from .wavefront import get_valid_neighbors, is_valid_cell, get_directions
+from .wavefront import potential_function as pf
 from .gradient_descent import gradient_descent
 
 """
@@ -198,7 +199,8 @@ def grad_ascent(potential_function, start_cell, goal_cell):
 
             # find viable path to chosen node
             # TODO: IMPLEMENT THIS
-            path_to_chosen = gradient_descent(potential_function,curr_cell, chosen)
+            descent_grid = pf(potential_function,chosen)
+            path_to_chosen = gradient_descent(descent_grid,curr_cell, chosen)
             coverage_path += path_to_chosen
             #for intermediate_n in path_to_chosen:
             #    coverage_path.append(intermediate_n)
